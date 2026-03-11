@@ -1,5 +1,7 @@
 package sorters
 
+import "golang.org/x/exp/constraints"
+
 // BubbleSort - сортировка пузырьком
 //
 //	Description:
@@ -24,7 +26,7 @@ func BubbleSort(a []int) []int {
 //	Description:
 //	Массив делится на отсортированную (слева) и неотсортированную части.
 //	На каждом шаге элемент из неотсортированной части "вставляется" в правильное место отсортированной, сдвигая большие элементы вправо.
-func InsertionSort(a []int) []int {
+func InsertionSort(a []int) {
 	var n = len(a)
 
 	for i := 1; i < n; i++ {
@@ -36,8 +38,6 @@ func InsertionSort(a []int) []int {
 		}
 		a[j+1] = num
 	}
-
-	return a
 }
 
 // SelectionSort - сортировка выбором
@@ -97,6 +97,33 @@ func merge(left, right []int) []int {
 	return res
 }
 
+func QuickSort[T constraints.Ordered](a []T, low, high int) {
+	if low < high {
+		pivotIndex := partition(a, low, high)
+
+		QuickSort[T](a, low, pivotIndex-1)
+		QuickSort[T](a, pivotIndex+1, high)
+	}
+}
+
+func swap[T any](a []T, i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func partition[T constraints.Ordered](a []T, low, high int) int {
+	pivot := a[high]
+	i := low - 1
+	for j := low; j < high; j++ {
+		if a[j] <= pivot {
+			i++
+			swap(a, i, j)
+		}
+	}
+
+	swap(a, i+1, high)
+	return i + 1
+}
+
 func QuickLomut(a []int, low, high int) []int {
 	// проверяем что массив состоит не из одного элемента или не пуст
 	if low < high {
@@ -109,31 +136,6 @@ func QuickLomut(a []int, low, high int) []int {
 	}
 
 	return a
-}
-
-func swap(a []int, i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
-
-func partition(a []int, low, high int) int {
-	// в качестве опорного элемента выбираем медианный
-	mid := (low + high) / 2
-	pivot := a[mid]
-
-	// закинем опорный элемент в конец массива для стандартного алгоритма
-	a[mid], a[high] = a[high], a[mid]
-
-	// индекс для элементов меньше опорного
-	i := low - 1
-	for j := low; j < high; j++ {
-		if a[j] <= pivot {
-			i++
-			swap(a, i, j)
-		}
-	}
-
-	swap(a, i+1, high)
-	return i + 1
 }
 
 func QuickHoar(a []int, low, high int) {
