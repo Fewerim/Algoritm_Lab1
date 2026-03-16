@@ -1,2 +1,4 @@
+github.com/Fewerim/my_structs v0.0.0-20260315074918-43b2e2d7f7f6 h1:zeUSMlWVts8AFGA8eCuty+5WIGbSnq7QBwjyF5S8qpA=
+github.com/Fewerim/my_structs v0.0.0-20260315074918-43b2e2d7f7f6/go.mod h1:/VjmMlqT2SCRUEhKyzPqSJXL/V2dB6Q4ED2/tbmN75w=
 golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa h1:Zt3DZoOFFYkKhDT3v7Lm9FDMEV06GpzjG2jrqW+QTE0=
 golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa/go.mod h1:K79w1Vqn7PoiZn+TkNpx3BUWUQksGO3JcVX6qIjytmA=

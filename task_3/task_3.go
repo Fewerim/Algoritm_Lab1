@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const MAX_NUM = 20_000
+const MAX = 20_000
 
 // inputReader - чтение входных данных
 func inputReader() string {
@@ -56,7 +56,7 @@ func SymmetricDifference(inputLine string, max int) []int {
 		}
 	}
 	result := make([]int, 0)
-	for num := 1; num <= MAX_NUM; num++ {
+	for num := 1; num <= MAX; num++ {
 		if counters[num] != 0 {
 			result = append(result, num)
 		}
@@ -66,6 +66,6 @@ func SymmetricDifference(inputLine string, max int) []int {
 
 func main() {
 	input := inputReader()
-	result := SymmetricDifference(input, MAX_NUM)
+	result := SymmetricDifference(input, MAX)
 	printArr(result)
 }

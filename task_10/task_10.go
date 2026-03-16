@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"strconv"
+	"strings"
 )
 
 var (
@@ -16,48 +16,39 @@ var (
 	answer []int
 )
 
-func dfs(start int, inside1 int, sumDeg int) {
-
+func dfs(start int, inside int, sumDeg int) {
 	if len(team) == K {
-
-		cross := sumDeg - 2*inside1
-		inside2 := M - inside1 - cross
-		score := inside1 + inside2
+		cross := sumDeg - 2*inside
+		inside2 := M - inside - cross
+		score := inside + inside2
 
 		if score > best {
 			best = score
 			answer = append([]int{}, team...)
 		}
-
 		return
 	}
 
 	for i := start; i <= N; i++ {
-
 		add := 0
 		for _, v := range team {
 			if g[v][i] {
 				add++
 			}
 		}
-
 		team = append(team, i)
-
-		dfs(i+1, inside1+add, sumDeg+deg[i])
-
+		dfs(i+1, inside+add, sumDeg+deg[i])
 		team = team[:len(team)-1]
 	}
 }
 
 func main() {
-
-	in := bufio.NewReader(os.Stdin)
-
-	fmt.Fscan(in, &N, &K, &M)
+	var N, K, M int
+	fmt.Scan(&N, &K, &M)
 
 	for i := 0; i < M; i++ {
 		var a, b int
-		fmt.Fscan(in, &a, &b)
+		fmt.Scan(&a, &b)
 
 		g[a][b] = true
 		g[b][a] = true
@@ -68,13 +59,13 @@ func main() {
 
 	dfs(1, 0, 0)
 
-	out := bufio.NewWriter(os.Stdout)
-	defer out.Flush()
-
+	var sb strings.Builder
 	for i, v := range answer {
 		if i > 0 {
-			fmt.Fprint(out, " ")
+			sb.WriteByte(' ')
 		}
-		fmt.Fprint(out, v)
+		str := strconv.Itoa(v)
+		sb.WriteString(str)
 	}
+	fmt.Print(sb.String())
 }
