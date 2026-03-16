@@ -37,7 +37,7 @@ func BenchmarkSymmetricDifference(b *testing.B) {
 	cases := []*TestCase{
 		New("test_1", "1 2 3 4 5 0 1 7 5 8 0", nil),
 		New("test_2", "1 2 6 8 7 3 0 4 1 6 2 3 9 0", nil),
-		New("large_test_3", createLargeInput(length), nil),
+		New("large_test_1", createLargeInput(length), nil),
 	}
 
 	for _, v := range cases {

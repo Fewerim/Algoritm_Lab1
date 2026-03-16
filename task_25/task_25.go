@@ -13,55 +13,55 @@ import (
 const (
 	MAX        = 2 * 109
 	minN, maxN = 1, 106
+	YES        = "YES"
+	NO         = "NO"
 )
 
-/*
-TODO:
-  - неубывающая пирамида на основе массива
-    Условия для каждого 1<=i<=n:
-  - if 2i <= n then a[i] <= a[2i]
-  - if 2i+1 <= n then a[i] <= a[2i+1]
-*/
-func isHeap(n int, array []int) bool {
+func isHeap(n int, array []int) string {
 	if len(array) == 0 {
-		return false
+		return NO
 	}
 
 	for i := 0; i < n; i++ {
-		left := 2 * i
-		right := 2*i + 1
+		left := 2*i + 1
+		right := 2*i + 2
 
 		if left < n && array[i] > array[left] {
-			return false
+			return NO
 		}
 		if right < n && array[i] > array[right] {
-			return false
+			return NO
 		}
 	}
-	return true
+	return YES
 }
 
 func input() (int, []int, error) {
-	results := make([]int, 0)
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	inputLine := scanner.Text()
 	var n int
-	for i, line := range strings.Split(inputLine, " ") {
-		if i == 0 {
-			n, _ = strconv.Atoi(line)
-			if n < minN || n > maxN {
-				return 0, nil, errors.New("n out of range")
-			}
-		}
-		num, _ := strconv.Atoi(line)
-		if abs := math.Abs(float64(num)); abs > MAX {
-			return 0, nil, errors.New("input num invalid")
-		}
-		results = append(results, num)
+	fmt.Scanln(&n)
+	if n < minN || n > maxN {
+		return 0, nil, errors.New("n out of range")
 	}
 
-	return n, results[1:], nil
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	line := scanner.Text()
+
+	fields := strings.Fields(line)
+	results := make([]int, n)
+	for i, field := range fields {
+		num, _ := strconv.Atoi(field)
+		if abs := math.Abs(float64(num)); abs > float64(MAX) {
+			return 0, nil, errors.New("num out of range")
+		}
+		results[i] = num
+	}
+
+	if len(results) != n {
+		return 0, nil, errors.New("invalid input")
+	}
+
+	return n, results, nil
 }
 
 func main() {

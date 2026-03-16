@@ -7,15 +7,15 @@ import (
 )
 
 const (
-	MaxSize    = 1_000_000
-	MaxNum     = 1_000_001
-	MinSize    = 3
-	MinNum     = -1_000_001
-	ErrorValue = 0
+	MaxSize    int = 1e6
+	MaxNum     int = 1e6 + 1
+	MinSize        = 3
+	MinNum     int = -1e6 - 1
+	ErrorValue     = 0
 )
 
 func input() []int {
-	var size int32
+	var size int
 	fmt.Scan(&size)
 	if size > MaxSize || size < MinSize {
 		return []int{}
