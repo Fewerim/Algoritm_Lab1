@@ -39,7 +39,9 @@ func MaxThree(input []int) int {
 	max1, max2, max3 := MinNum, MinNum, MinNum
 	min1, min2 := MaxNum, MaxNum
 
+	// проходим по всем элементам массива
 	for _, num := range input {
+		// сдвигаем максимумы
 		if num > max1 {
 			max3, max2, max1 = max2, max1, num
 		} else if num > max2 {
@@ -48,6 +50,7 @@ func MaxThree(input []int) int {
 			max3 = num
 		}
 
+		// аналогично с минимумами
 		if num < min1 {
 			min2, min1 = min1, num
 		} else if num < min2 {

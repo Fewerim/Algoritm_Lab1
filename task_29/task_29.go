@@ -1,104 +1,139 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
 
-const (
-	MAX = 5e4
-	LOG = 20
-)
-
-var g [MAX][]Edge
-var tin, tout, dist [MAX]int
-var up [MAX][LOG]int
-var timer int
+const LOG = 20
 
 type Edge struct {
-	to     int
-	weight int
+	to int
+	w  int
 }
 
-func scanner() (int, int) {
-	var n int
-	fmt.Scan(&n)
+type Tree struct {
+	n int
 
-	for i := 0; i < n-1; i++ {
-		var u, v, w int
-		fmt.Scan(&u, &v, &w)
+	g [][]Edge
 
-		g[u] = append(g[u], Edge{v, w})
-		g[v] = append(g[v], Edge{u, w})
+	tin, tout []int
+	dist      []int
+
+	up [][]int
+
+	timer int
+}
+
+func NewTree(n int) *Tree {
+	t := &Tree{
+		n:    n,
+		g:    make([][]Edge, n),
+		tin:  make([]int, n),
+		tout: make([]int, n),
+		dist: make([]int, n),
+		up:   make([][]int, n),
 	}
 
-	var m int
-	fmt.Scan(&m)
-	return n, m
+	for i := 0; i < n; i++ {
+		t.up[i] = make([]int, LOG)
+		for j := 0; j < LOG; j++ {
+			t.up[i][j] = -1
+		}
+	}
+
+	return t
 }
 
-func dfs(vertex, parent, len int) {
-	tin[vertex] = timer
-	timer++
-	up[vertex][0] = parent
-	dist[vertex] = len
+// addEdge - добавление ребра
+func (t *Tree) addEdge(u, v, w int) {
+	t.g[u] = append(t.g[u], Edge{v, w})
+	t.g[v] = append(t.g[v], Edge{u, w})
+}
 
+// dfs - для подготовки LCA
+func (t *Tree) dfs(v, parent, distFromRoot int) {
+	t.tin[v] = t.timer
+	t.timer++
+
+	t.up[v][0] = parent
+	t.dist[v] = distFromRoot
+
+	// бинарный подъём
 	for i := 1; i < LOG; i++ {
-		if up[vertex][i-1] != -1 {
-			up[vertex][i] = up[up[vertex][i-1]][i-1]
-		} else {
-			up[vertex][i] = -1
+		if t.up[v][i-1] != -1 {
+			t.up[v][i] = t.up[t.up[v][i-1]][i-1]
 		}
 	}
 
-	for _, edge := range g[vertex] {
-		to := edge.to
-		w := edge.weight
-
-		if to != parent {
-			dfs(to, vertex, len+w)
+	for _, e := range t.g[v] {
+		if e.to != parent {
+			t.dfs(e.to, v, distFromRoot+e.w)
 		}
 	}
 
-	tout[vertex] = timer
-	timer++
+	t.tout[v] = t.timer
+	t.timer++
 }
 
-func isParent(a, b int) bool {
-	return (tin[a] <= tin[b]) && (tin[b] <= tin[a])
+// isAncestor - является ли a предком b
+func (t *Tree) isAncestor(a, b int) bool {
+	return t.tin[a] <= t.tin[b] && t.tout[b] <= t.tout[a]
 }
 
-func LCA(a, b int) int {
-	if isParent(a, b) {
+// lca - наименьший общий предок
+func (t *Tree) lca(a, b int) int {
+	if t.isAncestor(a, b) {
 		return a
 	}
-
-	if isParent(b, a) {
+	if t.isAncestor(b, a) {
 		return b
 	}
 
 	for i := LOG - 1; i >= 0; i-- {
-		if !isParent(up[a][i], b) {
-			a = up[a][i]
+		if t.up[a][i] != -1 && !t.isAncestor(t.up[a][i], b) {
+			a = t.up[a][i]
 		}
 	}
-	return up[a][0]
+
+	return t.up[a][0]
+}
+
+// distance - расстояние между вершинами
+func (t *Tree) distance(a, b int) int {
+	lca := t.lca(a, b)
+	return t.dist[a] + t.dist[b] - 2*t.dist[lca]
 }
 
 func main() {
-	_, m := scanner()
-	dfs(0, 0, 0)
+	var n int
+	fmt.Scan(&n)
 
-	results := make([]int, m)
-	for i := 0; i < m; i++ {
-		var v, u int
-		fmt.Scan(&v, &u)
+	tree := NewTree(n)
 
-		lsa := LCA(v, u)
-		res := dist[v] + dist[u] - 2*dist[lsa]
-		results[i] = res
+	for i := 0; i < n-1; i++ {
+		var u, v, w int
+		fmt.Scan(&u, &v, &w)
+		tree.addEdge(u, v, w)
 	}
 
-	for result := range results {
-		fmt.Println(results[result])
+	// запускаем DFS от корня
+	root := 0
+	tree.dfs(root, -1, 0)
+
+	var m int
+	fmt.Scan(&m)
+
+	writer := bufio.NewWriter(os.Stdout)
+	defer writer.Flush()
+
+	// обрабатываем запросы
+	for i := 0; i < m; i++ {
+		var u, v int
+		fmt.Scan(&u, &v)
+
+		res := tree.distance(u, v)
+		fmt.Fprintln(writer, res)
 	}
 }

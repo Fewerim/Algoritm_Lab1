@@ -18,9 +18,9 @@ var (
 
 func dfs(start int, inside int, sumDeg int) {
 	if len(team) == K {
-		cross := sumDeg - 2*inside
-		inside2 := M - inside - cross
-		score := inside + inside2
+		cross := sumDeg - 2*inside    // считаем количество ребер между командами
+		inside2 := M - inside - cross // ребра внутри 2 команды
+		score := inside + inside2     // сплоченность
 
 		if score > best {
 			best = score
@@ -29,8 +29,11 @@ func dfs(start int, inside int, sumDeg int) {
 		return
 	}
 
+	// перебираем кандидатов
 	for i := start; i <= N; i++ {
 		add := 0
+
+		// сколько связей появляется внутри команды
 		for _, v := range team {
 			if g[v][i] {
 				add++
@@ -38,21 +41,24 @@ func dfs(start int, inside int, sumDeg int) {
 		}
 		team = append(team, i)
 		dfs(i+1, inside+add, sumDeg+deg[i])
+
+		// откатываем
 		team = team[:len(team)-1]
 	}
 }
 
 func main() {
-	var N, K, M int
 	fmt.Scan(&N, &K, &M)
 
 	for i := 0; i < M; i++ {
 		var a, b int
 		fmt.Scan(&a, &b)
 
+		// отмечаем знакомство
 		g[a][b] = true
 		g[b][a] = true
 
+		// увеличиваем степени знакомства
 		deg[a]++
 		deg[b]++
 	}

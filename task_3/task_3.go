@@ -37,10 +37,13 @@ func printArr(arr []int) {
 func SymmetricDifference(inputLine string, max int) []int {
 	input := strings.TrimSpace(inputLine)
 	inputArr := strings.Split(input, " ")
-	counters := make([]int, max+1)
-	isA := true
+
+	counters := make([]int, max+1) // создаем массив длинной max
+	isA := true                    // флаг, обозначающий, что начинаем движение по множеству А
 	for i := range inputArr {
 		num, _ := strconv.Atoi(inputArr[i])
+
+		// блок в котором меняем флаг, если 0 -> значит дошли до множества Б
 		if num == 0 {
 			if isA {
 				isA = false
@@ -49,13 +52,17 @@ func SymmetricDifference(inputLine string, max int) []int {
 			}
 			continue
 		}
+
+		// если множество А -> количество чисел = 1, если Б -> количество чисел = -1
 		if isA {
 			counters[num]++
 		} else {
 			counters[num]--
 		}
 	}
+
 	result := make([]int, 0)
+	// соответственно проверка, если число массива != 0 -> пересечений нет
 	for num := 1; num <= MAX; num++ {
 		if counters[num] != 0 {
 			result = append(result, num)
