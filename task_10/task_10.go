@@ -40,7 +40,12 @@ func dfs(start int, inside int, sumDeg int) {
 			}
 		}
 		team = append(team, i)
-		dfs(i+1, inside+add, sumDeg+deg[i])
+
+		newInside := inside + add    // добавляем количества ребер
+		newSumDeg := sumDeg + deg[i] // общее количество ребер выходящих из выбранных вершин
+		newStart := i + 1            // сдвигаемся далее, чтобы не натыкаться на дубликаты
+
+		dfs(newStart, newInside, newSumDeg)
 
 		// откатываем
 		team = team[:len(team)-1]
