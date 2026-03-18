@@ -21,7 +21,7 @@ type Tree struct {
 	tin, tout []int
 	dist      []int
 
-	up [][]int
+	up [][]int // таблица подъемов (up[v][i] - предок вершины v на высоте 2^i)
 
 	timer int
 }
@@ -52,7 +52,7 @@ func (t *Tree) addEdge(u, v, w int) {
 	t.g[v] = append(t.g[v], Edge{u, w})
 }
 
-// dfs - для подготовки LCA
+// dfs - для подготовки LCA (кто чей предок + поиск дистанций)
 func (t *Tree) dfs(v, parent, distFromRoot int) {
 	t.tin[v] = t.timer
 	t.timer++

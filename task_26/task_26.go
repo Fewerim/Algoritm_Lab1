@@ -7,13 +7,13 @@ import (
 )
 
 type Node struct {
-	val int
+	val int // значение
 	idx int // номер операции А
 }
 
 type Heap struct {
-	nodes []Node
-	pos   []int
+	nodes []Node // куча
+	pos   []int  // позиция элемента в куче
 }
 
 // Swap - меняет местами два элемента в куче и обновляет их позиции в массиве pos
@@ -63,7 +63,6 @@ func (h *Heap) NodeDown(i int) {
 		}
 
 		h.Swap(i, smallest)
-
 		i = smallest
 	}
 }
