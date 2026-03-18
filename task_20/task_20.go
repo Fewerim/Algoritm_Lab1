@@ -44,7 +44,7 @@ func buildPermutations(a [][]int, N, M int) ([]int, []int) {
 	return P, Q
 }
 
-func fixRows(P []int) []Op {
+func swapRows(P []int) []Op {
 	ops := []Op{}
 	N := len(P) - 1
 
@@ -59,7 +59,7 @@ func fixRows(P []int) []Op {
 	return ops
 }
 
-func fixCols(Q []int) []Op {
+func swapCols(Q []int) []Op {
 	ops := []Op{}
 	M := len(Q) - 1
 
@@ -86,8 +86,8 @@ func main() {
 	P, Q := buildPermutations(a, N, M)
 
 	ops := []Op{}
-	ops = append(ops, fixRows(P)...)
-	ops = append(ops, fixCols(Q)...)
+	ops = append(ops, swapRows(P)...)
+	ops = append(ops, swapCols(Q)...)
 
 	fmt.Fprintln(out, len(ops))
 	for _, op := range ops {
